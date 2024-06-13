@@ -1,0 +1,20 @@
+{
+  "name": "caniuse-baselineyears",
+  "version": "1.0.0",
+  "description": "Utility for creating a mapping of calendar years to final browser versions in baseline core browser set",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tonypconway/caniuse-baselineyears"
+  },
+  "author": "Tony Conway",
+  "license": "ISC",
+  "dependencies": {
+    "@mdn/browser-compat-data": "^5.5.33",
+    "caniuse-lite": "^1.0.30001633"
+  },
+  "type": "module"
+}
