@@ -1,5 +1,5 @@
 {
-  "name": "caniuse-baselineyears",
+  "name": "caniuse-baseline-years",
   "version": "1.0.0",
   "description": "Utility for creating a mapping of calendar years to final browser versions in baseline core browser set",
   "main": "index.js",
