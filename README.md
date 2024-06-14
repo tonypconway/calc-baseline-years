@@ -51,6 +51,7 @@ Returns a Javascript `Object` with the following format representing Baseline mi
   ...
 }
 ```
+
 This function takes a single argument, `year`, which is an int or string in the format `YYYY`.  If you pass a number lower than 2004, the script will throw an error, as none of the Baseline browser set existed before 2003.
 
 ### `getMinBaselineVersionsByYear(year)`
