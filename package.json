@@ -11,10 +11,9 @@
     "url": "https://github.com/tonypconway/caniuse-baselineyears"
   },
   "author": "Tony Conway",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
-    "@mdn/browser-compat-data": "^5.5.33",
-    "caniuse-lite": "^1.0.30001633"
+    "@mdn/browser-compat-data": "latest"
   },
   "type": "module"
 }
