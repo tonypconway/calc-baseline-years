@@ -70,7 +70,7 @@ This function takes ones argument, `year`.
 
 The function will return the object corresponding to the selected year in the same format as `getAllBaselineVersions()`.
 
-### `getMinBaseilneVersionByBrowserAndYear(browser, year)`
+### `getMinBaselineVersionByBrowserAndYear(browser, year)`
 
 This function takes two arguments: `browser` and `year`.
 
