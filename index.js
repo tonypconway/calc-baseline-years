@@ -1,5 +1,8 @@
 import bcd from '@mdn/browser-compat-data' assert { type: 'json' };
 
+import fs from 'node:fs'
+
+
 // https://github.com/web-platform-dx/web-features/blob/main/docs/baseline.md#core-browser-set
 const browsers = [
   "chrome",
@@ -90,3 +93,73 @@ export function getAllMinBaselineVersions(startingYear = 2016) {
 
   return finalVersionsPerYear;
 };
+
+export function getBaselineVersionsArray() {
+
+  let allVersions = new Array();
+
+  let baselineWAEpoch = Math.floor(new Date().setMonth(new Date().getMonth() - 30) / 1000);
+
+  browsers.forEach((browser) => {
+    let currentYear = 2016;
+    Object.entries(bcd.browsers[browser].releases)
+      // Filter out versions 
+      .filter(([version, details]) => {
+        {
+          if (!['current', 'esr', 'retired'].includes(details.status)) {
+            return false;
+          }
+          if (Date.parse(details.release_date) < Date.parse('2016.01.01')) {
+            return false;
+          }
+          return [version, details];
+        }
+      })
+      .sort((a, b) =>
+        Date.parse(a[1].release_date) - Date.parse(b[1].release_date)
+      )
+      .forEach(([version, details], index, arr) => {
+
+        let versionIsBaselineWA = (Date.parse(details.release_date) / 1000 > baselineWAEpoch);
+
+        let versionBaselineYear = currentYear;
+
+        if (index < arr.length - 1) {
+
+          if (details.release_date.substring(0, 4) == arr[index + 1][1].release_date.substring(0, 4)) {
+            versionBaselineYear--;
+          } else {
+            currentYear++;
+          }
+        }
+
+        allVersions.push({
+          browser: browser,
+          version: version,
+          release_date: details.release_date,
+          baseline_wa_compatible: versionIsBaselineWA,
+          baseline_year_compatible: versionBaselineYear
+        });
+      }
+      );
+  })
+
+  return allVersions;
+
+}
+
+let output = getBaselineVersionsArray();
+
+let outputFile = fs.createWriteStream('./output.csv');
+
+outputFile.on('error', console.log);
+
+outputFile.write(
+  `"browser","version","release_date","baseline_wa_compatible","baseline_year_compatible"\n`
+);
+
+output.forEach(version => {
+  outputFile.write(
+    `"${version.browser}","${version.version}","${version.release_date}","${version.baseline_wa_compatible}","${version.baseline_year_compatible}"\n`
+  )
+});
