@@ -1,8 +1,5 @@
 import bcd from '@mdn/browser-compat-data' assert { type: 'json' };
 
-import fs from 'node:fs'
-
-
 // https://github.com/web-platform-dx/web-features/blob/main/docs/baseline.md#core-browser-set
 const browsers = [
   "chrome",
@@ -148,11 +145,73 @@ export function getBaselineVersionsArray() {
 
 }
 
-function getBaselineCSV() {
+export function getBaselineVersionsArrayWithDownstream() {
+  let browsersArray = getBaselineVersionsArray();
+  const downstreamBrowsers = [
+    'opera_android',
+    'opera',
+    'samsunginternet_android',
+    'webview_android',
+    'oculus'
+  ];
+
+  let chromeVersions = browsersArray.filter(version => {
+    if (version.browser === 'chrome') {
+      return version
+    }
+  });
+
+  console.log(chromeVersions);
+
+  downstreamBrowsers.forEach(browser => {
+    Object.entries(bcd.browsers[browser].releases).filter(([version, details]) => {
+      {
+        if (!['current', 'esr', 'retired'].includes(details.status)) {
+          return false;
+        }
+        if (Date.parse(details.release_date) < Date.parse('2016.01.01')) {
+          return false;
+        }
+        if (details.engine != 'Blink') {
+          return false;
+        }
+        return [version, details];
+      }
+    }).forEach(([version, details]) => {
+
+      details.engine_version;
+
+      let mappedVersion = chromeVersions.find(chromeVersion => chromeVersion.version === details.engine_version);
+
+      if (mappedVersion) {
+        browsersArray.push({
+          browser: browser,
+          version: version,
+          release_date: details.release_date,
+          baseline_wa_compatible: mappedVersion.baseline_wa_compatible,
+          baseline_year_compatible: mappedVersion.baseline_year_compatible
+        });
+      }
+
+
+    });
+  });
+
+  return browsersArray;
+
+}
+
+export function getBaselineCSV(includeDownstream = false) {
   let csv = '"browser","version","release_date","baseline_wa_compatible","baseline_year_compatible"\n';
-  getBaselineVersionsArray().forEach((version) => {
+
+  let versionArray = includeDownstream
+    ? getBaselineVersionsArrayWithDownstream()
+    : getBaselineVersionsArray();
+
+  versionArray.forEach((version) => {
     csv += `"${version.browser}","${version.version}","${version.release_date}","${version.baseline_wa_compatible}","${version.baseline_year_compatible}"\n`;
   });
+
   console.log(csv);
   return csv;
 }
