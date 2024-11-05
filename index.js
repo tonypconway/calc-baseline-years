@@ -148,18 +148,11 @@ export function getBaselineVersionsArray() {
 
 }
 
-let output = getBaselineVersionsArray();
-
-let outputFile = fs.createWriteStream('./output.csv');
-
-outputFile.on('error', console.log);
-
-outputFile.write(
-  `"browser","version","release_date","baseline_wa_compatible","baseline_year_compatible"\n`
-);
-
-output.forEach(version => {
-  outputFile.write(
-    `"${version.browser}","${version.version}","${version.release_date}","${version.baseline_wa_compatible}","${version.baseline_year_compatible}"\n`
-  )
-});
+function getBaselineCSV() {
+  let csv = '"browser","version","release_date","baseline_wa_compatible","baseline_year_compatible"\n';
+  getBaselineVersionsArray().forEach((version) => {
+    csv += `"${version.browser}","${version.version}","${version.release_date}","${version.baseline_wa_compatible}","${version.baseline_year_compatible}"\n`;
+  });
+  console.log(csv);
+  return csv;
+}
