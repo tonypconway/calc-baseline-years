@@ -1,0 +1,36 @@
+name: Push Baseline CSV
+
+on:
+  schedule:
+    - cron: '0 17 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run getBaselineCSV
+        id: get_baseline_csv
+        run: |
+          node -e "import { getBaselineCSV } from './index.js'; import { writeFileSync } from 'fs'; const csv = getBaselineCSV(true); writeFileSync('baseline/baseline-with-downstream.csv', csv);"
+
+      - name: Commit and push baseline-with-downstream.csv
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add baseline/baseline-with-downstream.csv
+          git commit -m 'Add baseline-with-downstream.csv'
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
