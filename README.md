@@ -75,3 +75,29 @@ The function will return the object corresponding to the selected year in the sa
 This function takes two arguments: `browser` and `year`.
 
 This function returns an object containing the `version` and `release_date` objects for the requested browser and year.
+
+### `getBaselineVersionsArray()`
+
+This function returns an array of objects representing the baseline versions of each browser. Each object contains the following properties:
+
+* `browser`: The name of the browser.
+* `version`: The version number of the browser.
+* `release_date`: The release date of the browser version.
+* `baseline_wa_compatible`: A boolean indicating if the version is compatible with Baseline Widely Available.
+* `baseline_year_compatible`: The Baseline yearly feature set that this version represents.
+
+### `getBaselineVersionsArrayWithDownstream()`
+
+This function returns an array of objects representing the baseline versions of each browser, including downstream browsers.  The properties are the same as above.
+
+### `getBaselineCSV(includeDownstream = false)`
+
+This function returns a CSV as a string which contains the following columns:
+
+* `browser`: The name of the browser.
+* `version`: The version number of the browser.
+* `release_date`: The release date of the browser version.
+* `baseline_wa_compatible`: A boolean indicating if the version is compatible with the baseline WA.
+* `baseline_year_compatible`: The year the version is compatible with the baseline.
+
+The function takes a single optional argument, `includeDownstream`, which is a boolean indicating whether to include downstream browsers in the CSV. The default value is `false`.
